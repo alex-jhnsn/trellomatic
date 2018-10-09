@@ -1,0 +1,30 @@
+{
+  "name": "trellomatic",
+  "version": "1.0.0",
+  "description": "A lambda function that emails the contents of a trello board to the provided emails",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alex-jhnsn/trellomatic.git"
+  },
+  "keywords": [
+    "Trello",
+    "Lambda",
+    "Email",
+    "Siri",
+    "Shortcut"
+  ],
+  "author": "Alex Johnson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alex-jhnsn/trellomatic/issues"
+  },
+  "homepage": "https://github.com/alex-jhnsn/trellomatic#readme",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "node-fetch": "^2.2.0"
+  }
+}
