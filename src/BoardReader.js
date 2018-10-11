@@ -38,6 +38,9 @@ module.exports = {
             });
             var json = JSON.stringify(listsObject);
             return json;
+        })
+        .catch(err => {
+            console.log("Error: " + err);
         });
     },
     GetBoardTitle: function(boardId, auth) {
@@ -48,5 +51,8 @@ module.exports = {
         .then(data => {
             return data.name;
         })
+        .catch(err => {
+            console.log("Error: " + err);
+        });
     }
 }
