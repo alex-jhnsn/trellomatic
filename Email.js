@@ -10,7 +10,7 @@ module.exports = {
   Send: function(boardName, boardJson) {
     server.send({
       text:    "Here's the actions from the retro!", 
-      from:    process.env.EMAIL_ADDRESS, 
+      from:    `Trellomatic <${process.env.EMAIL_ADDRESS}>`, 
       to:      process.env.RECIPIENTS,
       subject: boardName,
       attachment: 
