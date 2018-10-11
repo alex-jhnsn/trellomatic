@@ -1,6 +1,7 @@
 require('dotenv').config();
 var BoardReader = require("./BoardReader");
 var Email = require("./Email");
+var HtmlFormatter = require("./PrettyPrinter");
 
 //To Be Imported From Siri Shortcut
 const boardId = process.env.TRELLO_BOARD_ID;
@@ -23,5 +24,6 @@ var boardJson = BoardReader.ReadBoard(boardId, auth);
 var test = Promise.all([boardName, boardJson]);
 
 test.then(value => {
-    Email.Send(value[0], value[1]);
+    var messageBody = HtmlFormatter.FormatHTML(value[1]);
+    Email.Send(value[0], messageBody);
 })

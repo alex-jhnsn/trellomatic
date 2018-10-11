@@ -5,17 +5,19 @@ var server 	= email.server.connect({
    host:    "smtp.gmail.com", 
    ssl:     true
 });
- 
-
 
 module.exports = {
   Send: function(boardName, boardJson) {
     server.send({
-      text:    boardJson, 
+      text:    "Here's the actions from the retro!", 
       from:    process.env.EMAIL_ADDRESS, 
       to:      process.env.RECIPIENTS,
-      subject: boardName
-    }, function(err, message) {  });
+      subject: boardName,
+      attachment: 
+      [
+      {data:boardJson, alternative:true},
+      ]
+    }, function(err, message) { console.log( err || "sent" ) });
   }
 }
 
