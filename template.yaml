@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description:
+    trellomatic
+    
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+    Function:
+        Timeout: 3
+
+Resources:
+
+    EndRetroFunction:
+        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+        Properties:
+            CodeUri: src/
+            Handler: index.EndRetro
+            Runtime: nodejs8.10
+            Events:
+                EndRetro:
+                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Properties:
+                        Path: /end-retro
+                        Method: post
+
+Outputs:
+
+    EndRetroApi:
+      Description: "API Gateway endpoint URL for Prod stage for End Retro function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/end-retro/"
+
+    EndRetroFunction:
+      Description: "End Retro Lambda Function ARN"
+      Value: !GetAtt EndRetroFunction.Arn
+
+    EndRetroFunctionIamRole:
+      Description: "Implicit IAM Role created for End Retro function"
+      Value: !GetAtt EndRetroFunctionRole.Arn

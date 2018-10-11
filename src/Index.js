@@ -13,17 +13,20 @@ const auth = "key=" + trello_api_key + "&token=" + trello_api_token;
 //POST emails from SIRI shortcut?
 
 var recipients = process.env.RECIPIENTS;
-
-// var res = curl lambda url
-// var url = new URL(res.url)
-// var boardId = url.searchParams.get("boardId");
-
 var boardName = BoardReader.GetBoardTitle(boardId, auth);
 var boardJson = BoardReader.ReadBoard(boardId, auth);
 
-var test = Promise.all([boardName, boardJson]);
+var boardInfo = Promise.all([boardName, boardJson]);
 
-test.then(value => {
+boardInfo.then(value => {
     var messageBody = HtmlFormatter.FormatHTML(value[1]);
     Email.Send(value[0], messageBody);
 })
+
+exports.EndRetro = async (event) => {
+    const response = {
+        statusCode: 200,
+        body: JSON.stringify('Success!')
+    };
+    return response;
+}
