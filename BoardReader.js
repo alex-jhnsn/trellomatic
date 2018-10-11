@@ -39,5 +39,14 @@ module.exports = {
             var json = JSON.stringify(listsObject);
             return json;
         });
+    },
+    GetBoardTitle: function(boardId, auth) {
+        return fetch(trello_api_url + "/boards/" + boardId + "?fields=id,name&" + auth)
+        .then(response => {
+            return response.json();
+        })
+        .then(data => {
+            return data.name;
+        })
     }
 }
