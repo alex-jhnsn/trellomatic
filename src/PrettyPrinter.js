@@ -32,7 +32,6 @@ module.exports = {
             body = body + `</ul></div><hr style=${hrStyle}>`;
         });
         body = body + `<p style=${footerTextStyle}>TRELLOMATIC<br><3</p></body></html>`;
-        console.log(body);
         return body;
     },
     FormatPlainText: function (board) {
