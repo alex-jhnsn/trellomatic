@@ -13,19 +13,16 @@ module.exports = {
    * @param {string} htmlContent The html content for the email 
    */
   Send: function(addresses, subject, htmlContent) {
-    addressesString = addresses.join();
-    console.log(addressesString);
-
     server.send({
       text:    "Here's the actions from the retro!", 
       from:    `Trellomatic <${process.env.EMAIL_ADDRESS}>`, 
-      to:      addressesString,
+      to:      addresses,
       subject: subject,
       attachment: 
       [
       {data:htmlContent, alternative:true},
       ]
-    }, function(err, message) { console.log( err || "sent" ) });
+    }, function(err, message) { console.log( err || "sent" ); return "sent"});
   }
 }
 

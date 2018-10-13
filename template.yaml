@@ -14,7 +14,7 @@ Resources:
         Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
         Properties:
             CodeUri: src/
-            Handler: index.EndRetro
+            Handler: Index.EndRetro
             Runtime: nodejs8.10
             Events:
                 EndRetro:
@@ -22,7 +22,7 @@ Resources:
                     Properties:
                         Path: /end-retro
                         Method: post
-
+    
 Outputs:
 
     EndRetroApi:
