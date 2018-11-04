@@ -6,9 +6,20 @@ var bodyStyle = "\"background-color: #FFF\"";
 var hrStyle = "\"border-top: 1px solid #111; width: 60%; margin: 40px auto \""
 
 module.exports = {
+    /**
+     * Turns the board JSON object into HTML to be sent in the email
+     * @returns {string}
+     * @param {string} board A representation of the board in a json string, see readme for required format 
+     */
     FormatHTML: function (board) {
         var body = `<html><body style=${bodyStyle}><p style=${pStyle}>Here are the actions from todays retro:</p>`;
-        board = JSON.parse(board);
+        
+        try {
+            board = JSON.parse(board);
+        } catch (error) {
+            return ("Error: " + error);
+        }
+       
         board.forEach(list => {
             body = body + `<h1 style=${h1Style}>` + list.ListName + "</h1>" + "<ul>";
 
@@ -32,6 +43,11 @@ module.exports = {
         body = body + `<p style=${footerTextStyle}>TRELLOMATIC<br><3</p></body></html>`;
         return body;
     },
+    /**
+     * Turns the board JSON object into HTML to be sent in the email
+     * @returns {string}
+     * @param {string} board A representation of the board in a json string, see readme for required format 
+     */
     FormatPlainText: function (board) {
         var text = "";
         board = JSON.parse(board);
