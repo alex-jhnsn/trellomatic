@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: trellomatic
+Globals:
+  Function:
+    Timeout: 10
+Outputs:
+  EndRetroApi:
+    Description: API Gateway endpoint URL for Prod stage for End Retro function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/end-retro/
+  EndRetroFunction:
+    Description: End Retro Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - EndRetroFunction
+      - Arn
+  EndRetroFunctionIamRole:
+    Description: Implicit IAM Role created for End Retro function
+    Value:
+      Fn::GetAtt:
+      - EndRetroFunctionRole
+      - Arn
+Resources:
+  EndRetroFunction:
+    Properties:
+      CodeUri: s3://trellomatic-bucket/413557c36feda6d3b9d96b3c1aa35914
+      Events:
+        EndRetro:
+          Properties:
+            Method: post
+            Path: /end-retro
+          Type: Api
+      Handler: Index.EndRetro
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31

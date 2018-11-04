@@ -7,17 +7,22 @@ var server 	= email.server.connect({
 });
 
 module.exports = {
-  Send: function(boardName, boardJson) {
+  /**
+   * @param {[string]} addresses A list of addresses that you want the emails to be sent to
+   * @param {string} subject The subject line of the email - I use the board name
+   * @param {string} htmlContent The html content for the email 
+   */
+  Send: function(addresses, subject, htmlContent) {
     server.send({
       text:    "Here's the actions from the retro!", 
       from:    `Trellomatic <${process.env.EMAIL_ADDRESS}>`, 
-      to:      process.env.RECIPIENTS,
-      subject: boardName,
+      to:      addresses,
+      subject: subject,
       attachment: 
       [
-      {data:boardJson, alternative:true},
+      {data:htmlContent, alternative:true},
       ]
-    }, function(err, message) { console.log( err || "sent" ) });
+    }, function(err, message) { console.log( err || "sent" ); return "sent"});
   }
 }
 
