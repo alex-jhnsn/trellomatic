@@ -39,38 +39,45 @@ function func (boardId, trello_api_key, trello_api_token, recipients, tidy, thre
 exports.EndRetro = (event, context, callback) => {
     var body = JSON.parse(event.body); 
 
-    if (Object.keys(body).length != 7) {
-        var missingValues = "Missing values: ";
+    if (Object.keys(body).length != 4) {
+        let errMsg = "Error bad request: ";
+        let missingValues = [];
         
         if (!body.hasOwnProperty("board_id")) {
-            missingValues = missingValues + "board_id ";
+            missingValues.push("board_id");
         }
 
         if (!body.hasOwnProperty("api_key")) {
-            missingValues = missingValues + "api_key ";
+            missingValues.push("api_key");
         }
 
         if (!body.hasOwnProperty("api_token")) {
-            missingValues = missingValues + "api_token ";
+            missingValues.push("api_key");
         }
 
         if (!body.hasOwnProperty("recipients")) {
-            missingValues = missingValues + "recipients ";
+            missingValues.push("recipients");
         }
 
-        if (!body.hasOwnProperty("tidy")) {
-            missingValues = missingValues + "tidy ";
+        if (missingValues.length) {
+            errMsg += "Missing required value(s): ";
+            missingValues.forEach(value => {
+                errMsg += value + ", ";
+            });
+            errMsg.slice(0, -2);
+            errMsg += "\n";
         }
 
-        if (!body.hasOwnProperty("delete_board_age_threshold")) {
-            missingValues = missingValues + "delete_board_age_threshold ";
+        if (body.hasOwnProperty("delete_old_boards")) {
+            let deleteOldBoards = body.delete_old_boards;
+
+            if (!(deleteOldBoards.hasOwnProperty("delete_before_date") ||
+            deleteOldBoards.hasOwnProperty("organisation_short_name"))) {
+                errMsg += "Optional argument 'delete_old_boards' requires: delete_before_date and organisation_short_name";
+            }
         }
 
-        if (!body.hasOwnProperty("org_name")) {
-            missingValues = missingValues + "org_name ";
-        }
-
-        console.log(missingValues);
+        console.log(errMsg);
         callback(null, {statusCode: 400, body: missingValues});
     }
 
@@ -78,11 +85,9 @@ exports.EndRetro = (event, context, callback) => {
     var trello_api_key = body.api_key;
     var trello_api_token = body.api_token;
     var recipients = body.recipients;
-    var tidy = body.tidy;
-    var threshold = body.delete_board_age_threshold;
-    var orgName = body.org_name;
+    var deleteBoards = body.tidy? body.tidy : null;
 
-    foo = func(boardId, trello_api_key, trello_api_token, recipients, tidy, threshold, orgName);
+    foo = func(boardId, trello_api_key, trello_api_token, recipients, deleteBoards);
     foo.then(res => {
         callback(null, res);
     });
