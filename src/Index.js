@@ -1,8 +1,8 @@
 require('dotenv').config();
 var BoardReader = require("./BoardReader");
 var Email = require("./Email");
-var HtmlFormatter = require("./PrettyPrinter");
-var TidyBoards = require("./TidyBoards");
+var BoardFormatter = require("./PrettyPrinter");
+var DeleteBoards = require("./DeleteBoards");
 
 /**
  * 
@@ -11,35 +11,43 @@ var TidyBoards = require("./TidyBoards");
  * @param {string} trello_api_token Your Trello API token
  * @param {[string]} recipients A list of all the people you want the email to be sent to
  */
-function func (boardId, trello_api_key, trello_api_token, recipients, tidy, threshold, orgName) {
-    return new Promise((resolve, reject) => {
-        const auth = "key=" + trello_api_key + "&token=" + trello_api_token;
+async function endRetroFunctionHandler (boardId, trello_api_key, trello_api_token, recipients, deleteBoards) {
+    const auth = "key=" + trello_api_key + "&token=" + trello_api_token;
 
-        var boardName = BoardReader.GetBoardTitle(boardId, auth);
-        var boardJson = BoardReader.ReadBoard(boardId, auth);
-        var boardInfo = Promise.all([boardName, boardJson]);
+    var boardName = await BoardReader.GetBoardTitle(boardId, auth);
+    var boardJson = await BoardReader.ReadBoard(boardId, auth);
 
-        boardInfo.then(value => {
-            var messageBody = HtmlFormatter.FormatHTML(value[1]);
-            recipients = recipients.join();
-            Email.Send(recipients, value[0], messageBody);
-        }).then(() => {
-            resolve ({
-                statusCode: 200,
-                body: "Email sent successfully"
-            });
-        }).then(() => {
-            if (tidy == true) {
-                TidyBoards.deleteBoards(threshold, auth, orgName)
-            }
-        })
-    });
+    var messageBody = BoardFormatter.FormatHTML(boardJson);
+
+    recipients = recipients.join();
+    try {
+        var emailResponse = await Email.Send(recipients, boardName, messageBody);
+    } catch (error) {
+        console.log("foo");
+        return ({statusCode: 500, body: error});
+    }
+        
+    var deleted = "deleteBoards argument not provided.";
+    if (deleteBoards != null) {
+        let deleteAge = deleteBoards.delete_before_date;
+        let orgName = deleteBoards.organisation_short_name;
+        let deleteResponse = await DeleteBoards.deleteBoardsByDate(deleteAge, orgName, auth);
+        if (deleteResponse.error == false) {
+             deleted = deleteResponse.delete ? "Successfully deleted " + deleteResponse.deletedBoards //Or "Successfully deleted 3 board(s)"
+                                             : "There were no boards that haven't been modified since " + deleteAge + " so none were deleted";
+        }
+    }
+
+    console.log(deleted)
+    response = "Email sent of board: " + boardName + "\n" + deleted; 
+
+    return ({statusCode: 200, body: response});
 }
 
-exports.EndRetro = (event, context, callback) => {
+exports.EndRetro = async (event, context) => {
     var body = JSON.parse(event.body); 
 
-    if (Object.keys(body).length != 4) {
+    if (Object.keys(body).length != 5) {
         let errMsg = "Error bad request: ";
         let missingValues = [];
         
@@ -78,17 +86,15 @@ exports.EndRetro = (event, context, callback) => {
         }
 
         console.log(errMsg);
-        callback(null, {statusCode: 400, body: missingValues});
+        return(null, {statusCode: 400, body: errMsg});
     }
 
     var boardId = body.board_id;
     var trello_api_key = body.api_key;
     var trello_api_token = body.api_token;
     var recipients = body.recipients;
-    var deleteBoards = body.tidy? body.tidy : null;
+    var deleteBoards = body.delete_old_boards? body.delete_old_boards : null;
 
-    foo = func(boardId, trello_api_key, trello_api_token, recipients, deleteBoards);
-    foo.then(res => {
-        callback(null, res);
-    });
+    var response = await endRetroFunctionHandler(boardId, trello_api_key, trello_api_token, recipients, deleteBoards);
+    return (null, response);
 }

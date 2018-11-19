@@ -1,6 +1,6 @@
-const TidyBoards = require('../TidyBoards');
+const DeleteBoards = require('../DeleteBoards');
 
-describe("When given a threshold in a valid datetime format", () => {
+describe("When specifying to delete based on board title, given boards and a threshold in a valid datetime format", () => {
     test("a list of board ids to be deleted should be returned", () => {
         let testBoards = [
             {
@@ -18,8 +18,10 @@ describe("When given a threshold in a valid datetime format", () => {
         ];
         let testThreshold = "2018-10-10";
 
-        result = TidyBoards.getEligableBoards(testBoards, testThreshold); 
+        result = DeleteBoards.getEligableBoards(testBoards, testThreshold); 
 
         expect(result).toEqual(["should_be_deleted"]);
     });
 });
+
+describe("When specifying to delete based on last modified, given boards and a threshold in a valid datetime format")
