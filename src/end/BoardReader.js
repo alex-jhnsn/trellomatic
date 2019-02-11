@@ -10,6 +10,7 @@ module.exports = {
      * @param {string} auth A string in the format: key="YOUR_KEY_HERE"&token="YOUR_TOKEN_HERE".
      */ 
     ReadBoard: async function (boardId, auth) {
+        //todo: ignore all the lists with previous actions as the name
         return fetch(trello_api_url + "/boards/" + boardId + "/lists?fields=id,name,pos&" + auth)
         .then(response => {
             return response.json();
@@ -32,9 +33,9 @@ module.exports = {
                                 }); 
                             } 
                             cards.push(card);  
-                        })
+                        });
                         return  {ListName: list.name, Positon: position, Cards: cards};                         
-                    })
+                    });
                 });
             return Promise.all(foo);     
         })
