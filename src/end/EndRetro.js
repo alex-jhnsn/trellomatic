@@ -12,10 +12,8 @@ var BoardMarker = require("./BoardMarker");
  * @param {[string]} recipients A list of all the people you want the email to be sent to
  */
 async function endRetroFunctionHandler (boardId, apiKey, apiToken, recipients) {
-    const auth = "key=" + apiKey + "&token=" + apiToken;
-
-    var boardName = await BoardReader.GetBoardTitle(boardId, auth);
-    var boardJson = await BoardReader.ReadBoard(boardId, auth);
+    var boardName = await BoardReader.GetBoardTitle(boardId, apiKey, apiToken);
+    var boardJson = await BoardReader.ReadBoard(boardId, apiKey, apiToken);
 
     var messageBody = BoardFormatter.FormatHTML(boardJson);
 
@@ -27,20 +25,6 @@ async function endRetroFunctionHandler (boardId, apiKey, apiToken, recipients) {
         return ({statusCode: 500, body: error});
     }
         
-    // var deleted = "deleteBoards argument not provided.";
-    // if (deleteBoards != null) {
-    //     let deleteAge = deleteBoards.delete_before_date;
-    //     let orgName = deleteBoards.organisation_short_name;
-    //     let deleteResponse = await DeleteBoards.deleteBoardsByDate(deleteAge, orgName, auth);
-    //     if (deleteResponse.error == false) {
-    //          deleted = deleteResponse.delete ? "Successfully deleted " + deleteResponse.deletedBoards //Or "Successfully deleted 3 board(s)"
-    //                                          : "There were no boards that haven't been modified since " + deleteAge + " so none were deleted";
-    //     }
-    // }
-
-    // console.log(deleted)
-
-    //TODO: Change name of board to have PREVIOUS RETRO in it.
     let response = await BoardMarker.Mark(boardId, boardName, apiKey, apiToken);
 
     response = "Email sent of board: " + boardName;
