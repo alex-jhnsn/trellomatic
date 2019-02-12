@@ -1,7 +1,7 @@
-var axios = require("axios");
-var getBoard = require("./GetPreviousBoards")
+var axios = require('axios');
+var getBoard = require('./GetPreviousBoards')
 
-const trello_api_url = "https://api.trello.com/1";
+const trello_api_url = 'https://api.trello.com/1';
 
 /**
  * @async
@@ -15,16 +15,16 @@ exports.delete = async (org, apiKey, apiToken) => {
     let toDelete = await getBoard.getPreviousBoards(org, apiKey, apiToken);
 
     if (toDelete.length === 0) {
-        return ({statusCode: 404, body: "No boards marked as previous board found, see documentation for more info"});
+        return ({statusCode: 404, body: 'No boards marked as previous board found, see documentation for more info'});
     } 
     
     if (toDelete.length > 1) {
-        return ({statusCode: 200, body: "Multiple boards marked as [PREVIOUS_RETRO] found, have a look at your trello account"});
+        return ({statusCode: 200, body: 'Multiple boards marked as [PREVIOUS_RETRO] found, have a look at your trello account'});
     }
 
     let toDeleteId = toDelete[0].id;
 
-    let deleteBoardsResponse = await axios.delete(trello_api_url + "/boards/" + toDeleteId, {
+    let deleteBoardsResponse = await axios.delete(trello_api_url + '/boards/' + toDeleteId, {
         params: {
             key: apiKey,
             token: apiToken
@@ -32,4 +32,4 @@ exports.delete = async (org, apiKey, apiToken) => {
     });
 
     return true;
-}
+};
