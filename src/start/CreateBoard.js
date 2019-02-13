@@ -1,6 +1,3 @@
-//Add voting power up to the board
-//https://api.trello.com/1/boards/id/powerUps?value=voting
-
 var axios = require("axios");
 var createActionables = require("./CreateActionables");
 var getMembers = require("./GetMembers");
@@ -18,7 +15,6 @@ const trello_api_url = "https://api.trello.com/1";
  */
 exports.createBoard = async (boardName, backgroundId, listNames, actionables, org, apiKey, apiToken) => {
 
-    
     let createBoardResponse = await axios.post(trello_api_url + 
         "/boards?name=" + boardName + "&defaultLabels=false&defaultLists=false&idOrganization=" + org +
         "&prefs_permissionLevel=org&powerUps=voting&prefs_voting=members&prefs_background=" + backgroundId +
@@ -32,9 +28,9 @@ exports.createBoard = async (boardName, backgroundId, listNames, actionables, or
             "&key=" + apiKey + "&token=" + apiToken);
             
             if (createListResponse.status === 200)
-            return true;
+                return true;
             return false;    
-        }));
+    }));
 
     if (listsResult.filter(v => v).length !== listNames.length)
         return {statusCode: 500, body: "Error creating one or more lists"};
