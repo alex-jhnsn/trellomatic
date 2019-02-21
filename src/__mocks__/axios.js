@@ -1,1 +1,0 @@
-exports.get = jest.fn(() => Promise.resolve({ data: {} }));
