@@ -2,7 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: trellomatic
 Globals:
   Function:
-    Timeout: 10
+    Timeout: 20
 Outputs:
   EndRetroApi:
     Description: API Gateway endpoint URL for Prod stage for End Retro function
@@ -20,17 +20,33 @@ Outputs:
       Fn::GetAtt:
       - EndRetroFunctionRole
       - Arn
+  StartRetroApi:
+    Description: API Gateway endpoint URL for Prod stage for End Retro function
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/start-retro/
 Resources:
   EndRetroFunction:
     Properties:
-      CodeUri: s3://trellomatic-bucket/413557c36feda6d3b9d96b3c1aa35914
+      CodeUri: s3://trellomatic-bucket/41457f28cd73540b2e431c8b07499842
       Events:
         EndRetro:
           Properties:
             Method: post
             Path: /end-retro
           Type: Api
-      Handler: Index.EndRetro
+      Handler: end/EndRetro.Main
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+  StartRetroFunction:
+    Properties:
+      CodeUri: s3://trellomatic-bucket/41457f28cd73540b2e431c8b07499842
+      Events:
+        StartRetro:
+          Properties:
+            Method: post
+            Path: /start-retro
+          Type: Api
+      Handler: start/StartRetro.Main
       Runtime: nodejs8.10
     Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31
