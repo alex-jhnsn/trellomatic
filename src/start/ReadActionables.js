@@ -1,7 +1,7 @@
 var axios = require('axios');
-var getBoard = require('./GetPreviousBoards')
+var getBoard = require('./GetPreviousBoards');
 
-const trello_api_url = "https://api.trello.com/1";
+const trello_api_url = 'https://api.trello.com/1';
 
 /**
  * @returns {void}
@@ -14,19 +14,19 @@ exports.readActionables = async (org, apiKey, apiToken) => {
     let previousBoards = await getBoard.getPreviousBoards(org, apiKey, apiToken);
 
     if (previousBoards.length === 0) {
-        return ({statusCode: 404, body: "No boards marked as [PREVIOUS_RETRO] found, see documentation for more info"});
+        return ({statusCode: 404, body: 'No boards marked as [PREVIOUS_RETRO] found, see documentation for more info'});
     }
 
     if (previousBoards.length > 1) {
-        return ({statusCode: 200, body: "Multiple boards marked as [PREVIOUS_RETRO] found, have a look at your trello account"});
+        return ({statusCode: 200, body: 'Multiple boards marked as [PREVIOUS_RETRO] found, have a look at your trello account'});
     }
 
     let previousBoardId = previousBoards[0].id;
-    let response = await axios.get(trello_api_url + '/boards/' + previousBoardId + "/cards", {
+    let response = await axios.get(trello_api_url + '/boards/' + previousBoardId + '/cards', {
         params: {
-            filter:"open",
-            fields:"name",
-            actions:"commentCard",
+            filter:'open',
+            fields:'name',
+            actions:'commentCard',
             key: apiKey,
             token: apiToken
         }
@@ -45,4 +45,4 @@ exports.readActionables = async (org, apiKey, apiToken) => {
         });
         return {name: card.name, actions: actions};
     });
-}
+};

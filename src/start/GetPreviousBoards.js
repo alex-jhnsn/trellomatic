@@ -1,6 +1,6 @@
-var axios = require("axios");
+var axios = require('axios');
 
-const trello_api_url = "https://api.trello.com/1";
+const trello_api_url = 'https://api.trello.com/1';
 
 /**
  * @async
@@ -10,20 +10,24 @@ const trello_api_url = "https://api.trello.com/1";
  * @param {string} apiToken Your Trello api token
  */
 exports.getPreviousBoards = async (org, apiKey, apiToken) => {
-    let response = await axios.get(trello_api_url + '/organizations/' + org + '/boards', {
-        params: {
-            filter:"open",
-            fields:"id,name",
-            key: apiKey,
-            token: apiToken
-        }
-    });
+	try {
+		let response = await axios.get(trello_api_url + '/organizations/' + org + '/boards', {
+			params: {
+				filter:'open',
+				fields:'id,name',
+				key: apiKey,
+				token: apiToken
+			}
+		});
 
-    let openBoards = response.data;
+		let openBoards = response.data;
 
-    let previousBoards = openBoards.filter(board => board.name.includes("[PREVIOUS_RETRO]"));
+		let previousBoards = openBoards.filter(board => board.name.includes('[PREVIOUS_RETRO]'));
 
-    console.log(previousBoards);
+		return previousBoards;
 
-    return previousBoards;
-}
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+};
