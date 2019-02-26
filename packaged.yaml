@@ -27,7 +27,7 @@ Outputs:
 Resources:
   EndRetroFunction:
     Properties:
-      CodeUri: s3://trellomatic-bucket/41457f28cd73540b2e431c8b07499842
+      CodeUri: s3://trellomatic-bucket/de3f6b64347e92e40ea00c26d1ad4639
       Events:
         EndRetro:
           Properties:
@@ -39,7 +39,7 @@ Resources:
     Type: AWS::Serverless::Function
   StartRetroFunction:
     Properties:
-      CodeUri: s3://trellomatic-bucket/41457f28cd73540b2e431c8b07499842
+      CodeUri: s3://trellomatic-bucket/de3f6b64347e92e40ea00c26d1ad4639
       Events:
         StartRetro:
           Properties:
