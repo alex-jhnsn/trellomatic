@@ -1,8 +1,8 @@
 require('dotenv').config();
-var BoardReader = require("./BoardReader");
-var Email = require("./Email");
-var BoardFormatter = require("./PrettyPrinter");
-var BoardMarker = require("./BoardMarker");
+var BoardReader = require('./BoardReader');
+var Email = require('./Email');
+var BoardFormatter = require('./PrettyPrinter');
+var BoardMarker = require('./BoardMarker');
 
 /**
  * 
@@ -19,15 +19,15 @@ async function endRetroFunctionHandler (boardId, apiKey, apiToken, recipients) {
 
     recipients = recipients.join();
     try {
-        var emailResponse = await Email.Send(recipients, boardName, messageBody);
+        await Email.Send(recipients, boardName, messageBody);
     } catch (error) {
-        console.log("foo");
+        console.log('foo');
         return ({statusCode: 500, body: error});
     }
         
     let response = await BoardMarker.Mark(boardId, boardName, apiKey, apiToken);
 
-    response = "Email sent of board: " + boardName;
+    response = 'Email sent of board: ' + boardName;
 
     return ({statusCode: 200, body: response});
 }
@@ -37,32 +37,32 @@ exports.Main = async (event, context) => {
 
     //Remove this and check if list is null
     if (Object.keys(body).length != 4) {
-        let errMsg = "Error bad request: ";
+        let errMsg = 'Error bad request: ';
         let missingValues = [];
         
-        if (!body.hasOwnProperty("board_id")) {
-            missingValues.push("board_id");
+        if (!body.hasOwnProperty('board_id')) {
+            missingValues.push('board_id');
         }
 
-        if (!body.hasOwnProperty("api_key")) {
-            missingValues.push("api_key");
+        if (!body.hasOwnProperty('api_key')) {
+            missingValues.push('api_key');
         }
 
-        if (!body.hasOwnProperty("api_token")) {
-            missingValues.push("api_key");
+        if (!body.hasOwnProperty('api_token')) {
+            missingValues.push('api_key');
         }
 
-        if (!body.hasOwnProperty("recipients")) {
-            missingValues.push("recipients");
+        if (!body.hasOwnProperty('recipients')) {
+            missingValues.push('recipients');
         }
 
         if (missingValues.length) {
-            errMsg += "Missing required value(s): ";
+            errMsg += 'Missing required value(s): ';
             missingValues.forEach(value => {
-                errMsg += value + ", ";
+                errMsg += value + ', ';
             });
             errMsg.slice(0, -2);
-            errMsg += "\n";
+            errMsg += '\n';
         }
 
         console.log(errMsg);
@@ -76,4 +76,4 @@ exports.Main = async (event, context) => {
 
     var response = await endRetroFunctionHandler(boardId, trello_api_key, trello_api_token, recipients);
     return (null, response);
-}
+};
