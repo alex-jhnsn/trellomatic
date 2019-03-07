@@ -33,7 +33,7 @@ exports.ReadBoard = async function (boardId, apiKey, apiToken) {
         {
             params: {
                 fields: 'name',
-                actions: 'commentCard&',
+                actions: 'commentCard',
                 key: apiKey,
                 token: apiToken
             }
@@ -61,7 +61,7 @@ exports.ReadBoard = async function (boardId, apiKey, apiToken) {
     var json = JSON.stringify(listsObject);
     console.log(json);
     return json;
-}
+};
 
 /**
  * Gets the title of the trello board from the id provided
@@ -80,4 +80,4 @@ exports.GetBoardTitle = async function(boardId, apiKey, apiToken) {
 
     let boardData = response.data;
     return boardData.name;
-}
+};

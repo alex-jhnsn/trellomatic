@@ -21,7 +21,6 @@ async function endRetroFunctionHandler (boardId, apiKey, apiToken, recipients) {
     try {
         await Email.Send(recipients, boardName, messageBody);
     } catch (error) {
-        console.log('foo');
         return ({statusCode: 500, body: error});
     }
         
